@@ -12,10 +12,38 @@ public class ChessBoard {
     }
 
     public void add(Pawn pawn, int xCoordinate, int yCoordinate, PieceColor pieceColor) {
-        throw new UnsupportedOperationException("Need to implement ChessBoard.add()");
+        if (pawn == null) {
+            throw new IllegalArgumentException("pawn cannot be null");
+        }
+
+        if (!isLegalBoardPosition(xCoordinate, yCoordinate) ||
+                !isEmptySquare(xCoordinate, yCoordinate) ||
+                !isValidStarPoint(pieceColor, xCoordinate)) {
+            pawn.setXCoordinate(-1);
+            pawn.setYCoordinate(-1);
+            return;
+        }
+
+        pawn.setChessBoard(this);
+        pawn.setXCoordinate(xCoordinate);
+        pawn.setYCoordinate(yCoordinate);
+        pieces[xCoordinate][yCoordinate] = pawn;
     }
 
     public boolean isLegalBoardPosition(int xCoordinate, int yCoordinate) {
-        throw new UnsupportedOperationException("Need to implement ChessBoard.IsLegalBoardPosition()");
+        final boolean isHorizontallyLegal = xCoordinate >= 0 && xCoordinate < BOARD_WIDTH;
+        final boolean isVerticallyLegal = yCoordinate >= 0 && yCoordinate < BOARD_HEIGHT;
+
+        return isVerticallyLegal && isHorizontallyLegal;
+    }
+
+
+    public boolean isEmptySquare(int xCoordinate, int yCoordinate) {
+        return pieces[xCoordinate][yCoordinate] == null;
+    }
+
+    private boolean isValidStarPoint(PieceColor pieceColor, int xCoordinate) {
+        return PieceColor.WHITE.equals(pieceColor) && xCoordinate == 1 ||
+                PieceColor.BLACK.equals(pieceColor) && xCoordinate == 6;
     }
 }
